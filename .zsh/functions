@@ -1,0 +1,8 @@
+# Functions
+
+# Create a new directory and change to it
+mkcd() {
+	mkdir -p "$@" && cd "$_"
+}
+
+
