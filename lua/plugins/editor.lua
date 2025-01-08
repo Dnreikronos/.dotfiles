@@ -123,6 +123,11 @@ return {
 		end
 	},
 	{
+  "rebelot/kanagawa.nvim",
+  lazy = true, -- make sure it loads early
+  priority = 1000, -- high priority to load before other colorschemes
+},
+	{
 		"smoka7/multicursors.nvim",
 		event = "VeryLazy",
 		dependencies = {
