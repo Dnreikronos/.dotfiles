@@ -1,3 +1,5 @@
+local key = vim.keymap.set
+
 vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
@@ -9,6 +11,9 @@ vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
+
+key({ 'n', 'i', 'v' }, '<C-s>', '<CMD>w<CR>', { desc = '[S]ave the current file.' })
+key({ 'n', 'i', 'v' }, '<C-q>', '<CMD>wqa<CR>', { desc = 'Save all files and [Q]uit.' })
 
 -- greatest remap ever
 vim.keymap.set("x", "<leader>p", [["_dP]])
