@@ -47,7 +47,7 @@ return {
                     hide_hidden = false,
                 },
                 window = {
-                    position = 'right',
+                    position = 'left',
                     mappings = {
                         ['h'] = 'close_node',
                         ['l'] = 'open',
