@@ -111,22 +111,39 @@ return {
 		}
 	},
 	{
-		"ellisonleao/gruvbox.nvim",
-		opts = {
-			contrast = "dark",
-		},
+		"catppuccin/nvim",
+		as = "catppuccin",
 		config = function()
-			require('gruvbox').setup({
-				contrast = "dark",
+			require("catppuccin").setup({
+				flavour = "macchiato",
+				transparent_background = false,
+				term_colors = true,
+				styles = {
+					comments = { "italic" },
+					conditionals = { "italic" },
+					loops = {},
+					functions = {},
+					keywords = {},
+					strings = {},
+					variables = {},
+					numbers = {},
+					booleans = {},
+					properties = {},
+					types = {},
+					operators = {},
+				},
+				integrations = {
+					telescope = true,
+					neotree = true,
+					cmp = true,
+					gitsigns = true,
+					treesitter = true,
+				},
 			})
-			vim.cmd("colorscheme gruvbox")
+
+			vim.cmd.colorscheme("catppuccin")
 		end
 	},
-	{
-  "rebelot/kanagawa.nvim",
-  lazy = true, -- make sure it loads early
-  priority = 1000, -- high priority to load before other colorschemes
-},
 	{
 		"smoka7/multicursors.nvim",
 		event = "VeryLazy",
