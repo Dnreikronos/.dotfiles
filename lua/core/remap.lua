@@ -31,5 +31,5 @@ vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 vim.keymap.set("n", "<tab>", vim.cmd.bnext)
 vim.keymap.set("n", "<S-tab>", vim.cmd.bNext)
 vim.keymap.set("n", "<leader>x", vim.cmd.bdelete)
-
+vim.api.nvim_set_keymap('v', '<C-c>', '"+y', { noremap = true, silent = true })
 

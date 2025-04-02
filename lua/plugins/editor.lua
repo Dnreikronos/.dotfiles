@@ -111,55 +111,10 @@ return {
 		}
 	},
 	{
-		"catppuccin/nvim",
-		as = "catppuccin",
+		"nanotech/jellybeans.vim",
 		config = function()
-			require("catppuccin").setup({
-				flavour = "macchiato",
-				transparent_background = false,
-				term_colors = true,
-				styles = {
-					comments = { "italic" },
-					conditionals = { "italic" },
-					loops = {},
-					functions = {},
-					keywords = {},
-					strings = {},
-					variables = {},
-					numbers = {},
-					booleans = {},
-					properties = {},
-					types = {},
-					operators = {},
-				},
-				integrations = {
-					telescope = true,
-					neotree = true,
-					cmp = true,
-					gitsigns = true,
-					treesitter = true,
-				},
-			})
-
-			vim.cmd.colorscheme("catppuccin")
+			vim.cmd.colorscheme("jellybeans")
 		end
-	},
-	{
-		"smoka7/multicursors.nvim",
-		event = "VeryLazy",
-		dependencies = {
-			'smoka7/hydra.nvim',
-		},
-		opts = {},
-		cmd = { 'MCstart', 'MCvisual', 'MCclear', 'MCpattern', 'MCvisualPattern', 'MCunderCursor' },
-		keys = {
-			{
-				mode = { 'v', 'n' },
-				'<Leader>m',
-				'<cmd>MCstart<cr>',
-				desc = 'Create a selection for selected text or word under the cursor',
-			},
-		},
 	},
 	{
 		'nvim-telescope/telescope.nvim',
