@@ -110,12 +110,32 @@ return {
 			{ "<C-l>",     function() require("harpoon.ui").nav_file(4) end,         desc = "Go to file 4" }
 		}
 	},
+	-- Tokyonight theme with transparency
 	{
-		"nanotech/jellybeans.vim",
+		"folke/tokyonight.nvim",
+		lazy = false,
+		priority = 1000,
 		config = function()
-			vim.cmd.colorscheme("jellybeans")
+			require("tokyonight").setup({
+				style = "night", -- available: storm, night, moon, day
+				transparent = true,
+				styles = {
+					sidebars = "transparent",
+					floats = "transparent",
+				},
+			})
+			vim.cmd("colorscheme tokyonight")
 		end
 	},
+
+	-- Removed jellybeans because you’re switching to tokyonight
+	-- {
+	-- 	"nanotech/jellybeans.vim",
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("jellybeans")
+	-- 	end
+	-- },
+
 	{
 		'nvim-telescope/telescope.nvim',
 		tag = '0.1.5',
