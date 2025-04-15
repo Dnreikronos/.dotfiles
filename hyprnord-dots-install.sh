@@ -29,10 +29,18 @@ echo "Welcome to Hyprnord-dots installer!"
 
 ## Dependencies install on Arch Linux
 if command -v pacman >/dev/null 2>&1; then
-    echo "Arch-based distro detected, installing deps.."
-    sudo pacman -Sy --noconfirm btop dunst fastfetch fish nwg-look hyprland kitty micro \
+    echo "Arch-based distro detected, installing deps..."
+		sudo pacman -Sy --noconfirm \
+        btop dunst fastfetch fish nwg-look hyprland kitty micro \
         nemo rofi-wayland waybar grim slurp swaybg python-pyquery jq \
         wl-clipboard libnotify
+
+    if command -v yay >/dev/null 2>&1; then
+        echo "Installing hyprshot from AUR using yay..."
+        yay -S --noconfirm hyprshot
+    else
+        echo "yay not found. Please install hyprshot manually from the AUR."
+    fi
 fi
 
 echo "Creating backups at: $HOME/.config/hyprnord-bak"
