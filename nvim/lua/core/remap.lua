@@ -1,4 +1,4 @@
-local key = vim.keymap.set
+﻿local key = vim.keymap.set
 
 vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
@@ -27,7 +27,7 @@ vim.keymap.set({"n", "v"}, "<leader>d", [["_d]])
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
-vim.keymap.set("v", "<C-k>", "<Plug>(comment_toggle_linewise_visual)", { noremap = false, desc = "Toggle comment on selection" })
+vim.keymap.set("v", "<C-5>", "<Plug>(comment_toggle_linewise_visual)", { noremap = false, desc = "Toggle comment on selection" })
 
 
 vim.keymap.set("n", "<tab>", vim.cmd.bnext)
