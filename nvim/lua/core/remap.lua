@@ -27,6 +27,8 @@ vim.keymap.set({"n", "v"}, "<leader>d", [["_d]])
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
+vim.keymap.set("v", "<C-k>", "<Plug>(comment_toggle_linewise_visual)", { noremap = false, desc = "Toggle comment on selection" })
+
 
 vim.keymap.set("n", "<tab>", vim.cmd.bnext)
 vim.keymap.set("n", "<S-tab>", vim.cmd.bNext)
