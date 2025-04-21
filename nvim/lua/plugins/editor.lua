@@ -28,7 +28,7 @@ return {
 		version = '*',
 		config = function()
 			require('mini.statusline').setup()
-		end
+		end,
 	},
 	{
 		'echasnovski/mini.trailspace',
@@ -110,50 +110,52 @@ return {
 			{ "<C-l>",     function() require("harpoon.ui").nav_file(4) end,         desc = "Go to file 4" }
 		}
 	},
-	-- Tokyonight theme with transparency
+
+	-- Theme: OneDark
 	{
-		"folke/tokyonight.nvim",
+		"navarasu/onedark.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			require("tokyonight").setup({
-				style = "night", -- available: storm, night, moon, day
+			require("onedark").setup({
+				style = "deep", -- Options: dark, darker, cool, deep, warm, warmer, light
 				transparent = true,
-				styles = {
-					sidebars = "transparent",
-					floats = "transparent",
-				},
+				term_colors = true,
+				ending_tildes = false,
+				code_style = {
+					comments = "italic",
+					keywords = "bold",
+					functions = "italic",
+					strings = "none",
+					variables = "none"
+				}
 			})
-			vim.cmd("colorscheme tokyonight")
+			require("onedark").load()
 		end
 	},
 
-	{
-		"nanotech/jellybeans.vim",
-		config = function()
-			vim.cmd.colorscheme("jellybeans")
-		end
-	},
-
+	-- Disabled: Nightfox
 	-- {
-	-- 	'nvim-telescope/telescope.nvim',
-	-- 	tag = '0.1.5',
-	-- 	dependencies = { 'nvim-lua/plenary.nvim' },
-	-- 	keys = {
-	-- 		{ '<C-p>',      function() require('telescope.builtin').git_files() end,  desc = "List git files" },
-	-- 		{
-	-- 			'<leader>fs',
-	-- 			function()
-	-- 				require('telescope.builtin').grep_string({ search = vim.fn.input("Grep > ") })
-	-- 			end,
-	-- 			desc = "Grep search"
-	-- 		},
-	-- 		{ '<leader>ff', function() require('telescope.builtin').find_files() end, desc = "List files" },
-	-- 		{ '<leader>fg', function() require('telescope.builtin').live_grep() end,  desc = "Live grep search" },
-	-- 		{ '<leader>fb', function() require('telescope.builtin').buffers() end,    desc = "List open buffers" },
-	-- 		{ '<leader>fh', function() require('telescope.builtin').help_tags() end,  desc = "List help tags" },
-	-- 	}
+	-- 	"EdenEast/nightfox.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("nightfox").setup({
+	-- 			options = {
+	-- 				transparent = true,
+	-- 				styles = {
+	-- 					comments = "italic",
+	-- 					keywords = "bold",
+	-- 					functions = "italic,bold",
+	-- 					strings = "NONE",
+	-- 					variables = "NONE",
+	-- 				},
+	-- 			}
+	-- 		})
+	-- 		vim.cmd("colorscheme nightfox")
+	-- 	end
 	-- },
+
 	{
 		"mbbill/undotree",
 		keys = {
@@ -204,3 +206,4 @@ return {
 		}
 	},
 }
+
