@@ -111,48 +111,66 @@ return {
 		}
 	},
 
-	-- Theme: OneDark
+	-- ✅ Theme: Black and Green
 	{
-		"navarasu/onedark.nvim",
+		"Mofiqul/vscode.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			require("onedark").setup({
-				style = "deep", -- Options: dark, darker, cool, deep, warm, warmer, light
-				transparent = true,
-				term_colors = true,
-				ending_tildes = false,
-				code_style = {
-					comments = "italic",
-					keywords = "bold",
-					functions = "italic",
-					strings = "none",
-					variables = "none"
+			vim.o.background = "dark"
+
+			require("vscode").setup({
+				transparent = false,
+				italic_comments = true,
+				disable_nvimtree_bg = true,
+				color_overrides = {
+					vscBack = "#000000",
+					vscLineNumber = "#00ff00",
+				},
+				group_overrides = {
+					Normal = { fg = "#00ff00", bg = "#000000" },
+					NormalNC = { fg = "#00ff00", bg = "#000000" },
+					LineNr = { fg = "#00ff00" },
+					CursorLineNr = { fg = "#00ff00", bold = true },
+					Comment = { fg = "#00ff00", italic = true },
+					Function = { fg = "#00ff00" },
+					Identifier = { fg = "#00ff00" },
+					Statement = { fg = "#00ff00", bold = true },
+					Type = { fg = "#00ff00" },
+					String = { fg = "#00ff00" },
+					Keyword = { fg = "#00ff00", bold = true },
+					Constant = { fg = "#00ff00" },
+					Operator = { fg = "#00ff00" },
+					PreProc = { fg = "#00ff00" },
+					Special = { fg = "#00ff00" },
+					Todo = { fg = "#000000", bg = "#00ff00", bold = true },
 				}
 			})
-			require("onedark").load()
+
+			require("vscode").load()
 		end
 	},
 
-	-- Disabled: Nightfox
+	-- Disabled: OneDark
 	-- {
-	-- 	"EdenEast/nightfox.nvim",
+	-- 	"navarasu/onedark.nvim",
 	-- 	lazy = false,
 	-- 	priority = 1000,
 	-- 	config = function()
-	-- 		require("nightfox").setup({
-	-- 			options = {
-	-- 				transparent = true,
-	-- 				styles = {
-	-- 					comments = "italic",
-	-- 					keywords = "bold",
-	-- 					functions = "italic,bold",
-	-- 					strings = "NONE",
-	-- 					variables = "NONE",
-	-- 				},
+	-- 		require("onedark").setup({
+	-- 			style = "deep",
+	-- 			transparent = true,
+	-- 			term_colors = true,
+	-- 			ending_tildes = false,
+	-- 			code_style = {
+	-- 				comments = "italic",
+	-- 				keywords = "bold",
+	-- 				functions = "italic",
+	-- 				strings = "none",
+	-- 				variables = "none"
 	-- 			}
 	-- 		})
-	-- 		vim.cmd("colorscheme nightfox")
+	-- 		require("onedark").load()
 	-- 	end
 	-- },
 
