@@ -1,5 +1,5 @@
 [window]
-opacity = 0.85
+opacity = 0.90
 decorations = "full"
 startup_mode = "Windowed"
 
@@ -8,7 +8,7 @@ program = "/usr/bin/tmux"
 args = ["new-session", "-A", "-D"]
 
 [colors.primary]
-background = "0x1e1e2e"
+background = "0x0d0d12"
 foreground = "0xcdd6f4"
 
 [colors.normal]
@@ -31,5 +31,8 @@ magenta = "0xf5c2e7"
 cyan    = "0x94e2d5"
 white   = "0xa6adc8"
 
-[terminal]
+[[keyboard.bindings]]
+key = "K"
+mods = "Control"
+action = "CopySelection"
 
