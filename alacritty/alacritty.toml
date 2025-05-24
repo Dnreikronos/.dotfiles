@@ -1,7 +1,7 @@
 [window]
 opacity = 0.90
 decorations = "full"
-startup_mode = "Windowed"
+startup_mode = "Fullscreen" # Changed from "Windowed"
 
 [terminal.shell]
 program = "/usr/bin/tmux"
@@ -35,4 +35,3 @@ white   = "0xa6adc8"
 key = "K"
 mods = "Control"
 action = "CopySelection"
-
