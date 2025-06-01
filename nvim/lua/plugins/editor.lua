@@ -111,11 +111,17 @@ return {
 		}
 	},
 	{
-		"folke/tokyonight.nvim",
+		"rose-pine/neovim",
+		name = "rose-pine",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			vim.cmd[[colorscheme tokyonight]]
+			require("rose-pine").setup({
+				variant = "moon",
+				disable_background = true,
+				disable_float_background = true,
+			})
+			vim.cmd("colorscheme rose-pine")
 		end
 	},
 	{

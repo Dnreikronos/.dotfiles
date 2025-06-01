@@ -29,7 +29,7 @@ return {
 		end,
 	},
 
-	-- Dial Plugin (for increment and decrement)
+	-- Dial Plugin
 	{
 		"monaqa/dial.nvim",
 		keys = {
@@ -47,7 +47,7 @@ return {
 		opts = {},
 	},
 
-	-- Trouble Plugin (for displaying diagnostics)
+	-- Trouble Plugin
 	{
 		"folke/trouble.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -57,26 +57,20 @@ return {
 		},
 	},
 
-	-- Treesitter Plugin (for syntax highlighting)
-	-- LSP Zero Plugin (now updated)
+	-- LSP Zero Plugin
 	{
 		'VonHeikemen/lsp-zero.nvim',
 		branch = 'v1.x',
 		dependencies = {
-			-- LSP Support
 			'neovim/nvim-lspconfig',
 			'williamboman/mason.nvim',
 			'williamboman/mason-lspconfig.nvim',
-
-			-- Autocompletion
 			'hrsh7th/nvim-cmp',
 			'hrsh7th/cmp-buffer',
 			'hrsh7th/cmp-path',
 			'saadparwaiz1/cmp_luasnip',
 			'hrsh7th/cmp-nvim-lsp',
 			'hrsh7th/cmp-nvim-lua',
-
-			-- Snippets
 			'L3MON4D3/LuaSnip',
 			'rafamadriz/friendly-snippets',
 		},
@@ -87,8 +81,6 @@ return {
 			})
 
 			local lspconfig = require("lspconfig")
-
-			-- LSP Key Mappings
 			local on_attach = function(client, bufnr)
 				local opts = { buffer = bufnr, remap = false }
 
@@ -104,7 +96,6 @@ return {
 				vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
 			end
 
-			-- Configure Language Servers
 			lspconfig.lua_ls.setup({
 				on_attach = on_attach,
 				settings = {
@@ -122,7 +113,14 @@ return {
 			lspconfig.gopls.setup({ on_attach = on_attach })
 			lspconfig.prismals.setup({ on_attach = on_attach })
 
-			-- Completion
+			-- Solidity LSP
+			lspconfig.solidity.setup({
+				on_attach = on_attach,
+				cmd = { "solidity-language-server", "--stdio" },
+				filetypes = { "solidity" },
+				root_dir = lspconfig.util.root_pattern("hardhat.config.js", "foundry.toml", ".git"),
+			})
+
 			local cmp = require('cmp')
 			cmp.setup({
 				mapping = {
@@ -153,3 +151,4 @@ return {
 		build = function() vim.fn["mkdp#util#install"]() end,
 	},
 }
+

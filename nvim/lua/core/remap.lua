@@ -19,19 +19,23 @@ key({ 'n', 'i', 'v' }, '<C-q>', '<CMD>wqa<CR>', { desc = 'Save all files and [Q]
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
 -- next greatest remap ever : asbjornHaland
-vim.keymap.set({"n", "v"}, "<leader>y", [["+y]])
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
 
-vim.keymap.set({"n", "v"}, "<leader>d", [["_d]])
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
-vim.keymap.set("v", "<C-5>", "<Plug>(comment_toggle_linewise_visual)", { noremap = false, desc = "Toggle comment on selection" })
+vim.keymap.set("v", "<C-5>", "<Plug>(comment_toggle_linewise_visual)",
+	{ noremap = false, desc = "Toggle comment on selection" })
+
+--[[ telescope ]]
+vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
+vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = 'Find Files' })
 
 
 vim.keymap.set("n", "<tab>", vim.cmd.bnext)
 vim.keymap.set("n", "<S-tab>", vim.cmd.bNext)
 vim.keymap.set("n", "<leader>x", vim.cmd.bdelete)
 vim.api.nvim_set_keymap('v', '<C-c>', '"+y', { noremap = true, silent = true })
-
