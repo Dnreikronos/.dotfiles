@@ -30,7 +30,7 @@ vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
 vim.keymap.set("v", "<C-5>", "<Plug>(comment_toggle_linewise_visual)",
-	{ noremap = false, desc = "Toggle comment on selection" })
+  { noremap = false, desc = "Toggle comment on selection" })
 
 --[[ telescope ]]
 vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
@@ -47,4 +47,7 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
+map("n", "<C-t>", function()
+  require("nvchad.themes").open()
+end, {})
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
