@@ -13,6 +13,13 @@ return {
     end,
   },
 
+  -- cord.nvim plugin
+  {
+    'vyfor/cord.nvim',
+    build = ':Cord update',
+    -- opts = {}
+  },
+
   -- Import other plugin files
 
   -- test new blink
