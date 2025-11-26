@@ -29,7 +29,7 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
-vim.keymap.set("v", "<C-5>", "<Plug>(comment_toggle_linewise_visual)",
+vim.keymap.set("v", "<leader>/", "<Plug>(comment_toggle_linewise_visual)",
   { noremap = false, desc = "Toggle comment on selection" })
 
 --[[ telescope ]]
