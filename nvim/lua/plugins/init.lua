@@ -21,6 +21,10 @@ return {
     -- opts = {}
   },
 
+  {
+    import = "nvchad.blink.lazyspec" 
+  },
+
   -- Import other plugin files
 
   -- test new blink
