@@ -1,42 +1,35 @@
 return {
   {
     "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
+    event = 'BufWritePre',
     opts = require "configs.conform",
   },
-
-  -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
     config = function()
       require "configs.lspconfig"
     end,
   },
-
-  -- cord.nvim plugin
   {
     'vyfor/cord.nvim',
     build = ':Cord update',
     event = "VimEnter",
-    -- opts = {}
   },
-
+  {
+    'lewis6991/gitsigns.nvim',
+    event = "BufRead",
+    config = function()
+      require('gitsigns').setup({
+        current_line_blame = true,
+        current_line_blame_opts = {
+          virt_text = true,
+          virt_text_pos = 'eol',
+          delay = 300,
+        },
+      })
+    end,
+  },
   {
     import = "nvchad.blink.lazyspec" 
   },
-
-  -- Import other plugin files
-
-  -- test new blink
-  -- { import = "nvchad.blink.lazyspec" },
-
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- 	},
-  -- },
 }
