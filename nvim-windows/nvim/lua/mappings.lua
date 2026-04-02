@@ -47,6 +47,17 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
+-- git hunk navigation
+map("n", "]g", function() require("gitsigns").nav_hunk("next") end, { desc = "Next git change" })
+map("n", "[g", function() require("gitsigns").nav_hunk("prev") end, { desc = "Previous git change" })
+map("n", "<leader>gp", function() require("gitsigns").preview_hunk() end, { desc = "Preview git hunk" })
+map("n", "<leader>gr", function() require("gitsigns").reset_hunk() end, { desc = "Reset git hunk" })
+
+map("n", "<leader>ln", function()
+  vim.wo.number = not vim.wo.number
+  vim.wo.relativenumber = not vim.wo.relativenumber
+end, { desc = "Toggle line numbers" })
+
 map("n", "<C-t>", function()
   require("nvchad.themes").open()
 end, {})
