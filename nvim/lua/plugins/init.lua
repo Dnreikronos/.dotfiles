@@ -56,6 +56,12 @@ return {
     end,
   },
   {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = "cd app && npx --yes yarn install",
+  },
+  {
     import = "nvchad.blink.lazyspec"
   },
 }

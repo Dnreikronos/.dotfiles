@@ -58,6 +58,8 @@ map("n", "<leader>ln", function()
   vim.wo.relativenumber = not vim.wo.relativenumber
 end, { desc = "Toggle line numbers" })
 
+map("n", "<leader>mp", "<CMD>MarkdownPreviewToggle<CR>", { desc = "Toggle markdown preview" })
+
 map("n", "<C-t>", function()
   require("nvchad.themes").open()
 end, {})
