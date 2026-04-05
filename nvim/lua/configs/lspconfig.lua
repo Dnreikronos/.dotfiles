@@ -6,6 +6,7 @@ local servers = {
   "html",          -- HTML
   "cssls",         -- CSS
   "ts_ls",         -- React/Next.js (TypeScript/JavaScript)
+  "solidity_ls_nomicfoundation", -- Solidity
 }
 
 vim.lsp.enable(servers)

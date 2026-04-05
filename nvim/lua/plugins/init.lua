@@ -5,6 +5,20 @@ return {
     opts = require "configs.conform",
   },
   {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    opts = {
+      ensure_installed = {
+        "gopls",
+        "rust_analyzer",
+        "html",
+        "cssls",
+        "ts_ls",
+        "solidity_ls_nomicfoundation",
+      },
+    },
+  },
+  {
     "neovim/nvim-lspconfig",
     config = function()
       require "configs.lspconfig"
