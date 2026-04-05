@@ -5,7 +5,7 @@ local servers = {
   "rust_analyzer", -- Rust
   "html",          -- HTML
   "cssls",         -- CSS
-  "tsserver",      -- React/Next.js (TypeScript/JavaScript)
+  "ts_ls",         -- React/Next.js (TypeScript/JavaScript)
 }
 
 vim.lsp.enable(servers)
