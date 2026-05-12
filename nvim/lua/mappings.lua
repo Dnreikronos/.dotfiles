@@ -65,8 +65,8 @@ map("n", "<C-t>", function()
 end, {})
 
 -- window resize
-map("n", "<C-Right>", "<cmd>vertical resize +5<CR>", { desc = "Increase window width" })
-map("n", "<C-Left>", "<cmd>vertical resize -5<CR>", { desc = "Decrease window width" })
-map("n", "<C-Up>", "<cmd>resize +3<CR>", { desc = "Increase window height" })
-map("n", "<C-Down>", "<cmd>resize -3<CR>", { desc = "Decrease window height" })
+map("n", "<C-A-l>", "<cmd>vertical resize +5<CR>", { desc = "Increase window width" })
+map("n", "<C-A-h>", "<cmd>vertical resize -5<CR>", { desc = "Decrease window width" })
+map("n", "<C-A-k>", "<cmd>resize +3<CR>", { desc = "Increase window height" })
+map("n", "<C-A-j>", "<cmd>resize -3<CR>", { desc = "Decrease window height" })
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
