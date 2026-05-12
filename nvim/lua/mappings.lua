@@ -210,6 +210,28 @@ map({ "n", "t" }, "<A-n>h", make_new("sp"),
 map({ "n", "t" }, "<A-n>v", make_new("vsp"),
   { desc = "New vertical term" })
 
+-- Kill (force-wipe) current terminal buffer.
+map("n", "<leader>tk", function()
+  local b = vim.api.nvim_get_current_buf()
+  if vim.bo[b].buftype == "terminal" then
+    pcall(vim.api.nvim_buf_delete, b, { force = true })
+  else
+    vim.notify("Not a terminal buffer", vim.log.levels.WARN)
+  end
+end, { desc = "Kill current terminal" })
+
+-- Kill ALL terminal buffers.
+map("n", "<leader>tK", function()
+  local killed = 0
+  for _, b in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_valid(b) and vim.bo[b].buftype == "terminal" then
+      pcall(vim.api.nvim_buf_delete, b, { force = true })
+      killed = killed + 1
+    end
+  end
+  vim.notify("Killed " .. killed .. " terminal(s)")
+end, { desc = "Kill ALL terminals" })
+
 -- Reload config: clear loaded user modules, recompile base46 (theme cache),
 -- re-source init.lua, and reapply highlights so chadrc changes (incl.
 -- transparency) take effect without a full restart.
