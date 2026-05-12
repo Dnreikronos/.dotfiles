@@ -40,6 +40,20 @@ vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { des
 vim.keymap.set("n", "<tab>", vim.cmd.bnext)
 vim.keymap.set("n", "<S-tab>", vim.cmd.bNext)
 vim.keymap.set("n", "<leader>x", vim.cmd.bdelete)
+vim.keymap.set("n", "<leader>X", function()
+  local closed = 0
+  for _, b in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_valid(b) and vim.api.nvim_buf_get_name(b) == "" then
+      local lines = vim.api.nvim_buf_line_count(b)
+      local first = vim.api.nvim_buf_get_lines(b, 0, 1, false)[1] or ""
+      if lines <= 1 and first == "" then
+        pcall(vim.api.nvim_buf_delete, b, { force = true })
+        closed = closed + 1
+      end
+    end
+  end
+  vim.notify("Closed " .. closed .. " empty [No Name] buffer(s)")
+end, { desc = "Wipe all empty [No Name] buffers" })
 vim.api.nvim_set_keymap('v', '<C-c>', '"+y', { noremap = true, silent = true })
 
 local map = vim.keymap.set
@@ -102,45 +116,99 @@ map("n", "<C-A-k>", "<cmd>resize +3<CR>", { desc = "Increase window height" })
 map("n", "<C-A-j>", "<cmd>resize -3<CR>", { desc = "Decrease window height" })
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
--- Persistent toggleable terminal size (override NvChad <A-h> / <A-v>)
--- nvchad.term stores opts in g.nvchad_terms keyed by buf. display() uses
--- opts.size (fraction of lines/columns) if set. Capture the current size
--- before closing, replay it on next open.
+-- Group toggle: <A-h>/<A-v> hide all visible terms of given orientation,
+-- or re-show all hidden terms of that orientation. Persists ABSOLUTE
+-- rows/cols (not fraction) so size survives external window resizes.
+-- Re-show always splits off the anchor (current non-term win at toggle
+-- time), iterated in reverse so final order matches buf creation order.
 local saved_sizes = { sp = nil, vsp = nil }
 
-local function make_toggle(pos, id)
+local function size_to_fraction(pos)
+  local abs = saved_sizes[pos]
+  if not abs then return nil end
+  local total = (pos == "sp") and vim.o.lines or vim.o.columns
+  if total <= 0 then return nil end
+  return abs / total
+end
+
+local function toggle_group(pos)
   return function()
     local terms = vim.g.nvchad_terms or {}
-    local existing
+    local group = {}
     for _, t in pairs(terms) do
-      if type(t) == "table" and t.id == id then existing = t; break end
-    end
-
-    local visible_win = nil
-    if existing and vim.api.nvim_buf_is_valid(existing.buf) then
-      local win = vim.fn.bufwinid(existing.buf)
-      if win ~= -1 then visible_win = win end
-    end
-
-    if visible_win then
-      if pos == "sp" then
-        saved_sizes.sp = vim.api.nvim_win_get_height(visible_win) / vim.o.lines
-      else
-        saved_sizes.vsp = vim.api.nvim_win_get_width(visible_win) / vim.o.columns
+      if type(t) == "table" and t.pos == pos and vim.api.nvim_buf_is_valid(t.buf) then
+        table.insert(group, t)
       end
     end
+    table.sort(group, function(a, b) return a.buf < b.buf end)
 
-    local opts = { pos = pos, id = id }
-    local s = saved_sizes[pos]
-    if s then opts.size = s end
-    require("nvchad.term").toggle(opts)
+    if #group == 0 then
+      local id = (pos == "sp") and "htoggleTerm" or "vtoggleTerm"
+      local opts = { pos = pos, id = id }
+      local frac = size_to_fraction(pos)
+      if frac then opts.size = frac end
+      require("nvchad.term").new(opts)
+      return
+    end
+
+    local visible_wins = {}
+    for _, t in ipairs(group) do
+      local win = vim.fn.bufwinid(t.buf)
+      if win ~= -1 then table.insert(visible_wins, win) end
+    end
+
+    if #visible_wins > 0 then
+      local first = visible_wins[1]
+      if pos == "sp" then
+        saved_sizes.sp = vim.api.nvim_win_get_height(first)
+      else
+        saved_sizes.vsp = vim.api.nvim_win_get_width(first)
+      end
+      for _, win in ipairs(visible_wins) do
+        pcall(vim.api.nvim_win_close, win, true)
+      end
+    else
+      local size = saved_sizes[pos]
+      local anchor = vim.api.nvim_get_current_win()
+      local modifier = (pos == "sp") and "belowright" or "vertical belowright"
+
+      for i = #group, 1, -1 do
+        local t = group[i]
+        if vim.api.nvim_win_is_valid(anchor) then
+          vim.api.nvim_set_current_win(anchor)
+        end
+        local cmd
+        if size then
+          cmd = string.format("%s %d split | buffer %d", modifier, size, t.buf)
+        else
+          cmd = string.format("%s split | buffer %d", modifier, t.buf)
+        end
+        pcall(vim.cmd, cmd)
+      end
+    end
   end
 end
 
-map({ "n", "t" }, "<A-h>", make_toggle("sp", "htoggleTerm"),
-  { desc = "Toggle horizontal term (persist size)" })
-map({ "n", "t" }, "<A-v>", make_toggle("vsp", "vtoggleTerm"),
-  { desc = "Toggle vertical term (persist size)" })
+map({ "n", "t" }, "<A-h>", toggle_group("sp"),
+  { desc = "Toggle ALL horizontal terms" })
+map({ "n", "t" }, "<A-v>", toggle_group("vsp"),
+  { desc = "Toggle ALL vertical terms" })
+
+-- Spawn additional terms (do NOT collide with toggle IDs above).
+-- Each press creates a fresh term buf with unique id, reusing saved size.
+local function make_new(pos)
+  return function()
+    local opts = { pos = pos, id = "extraTerm_" .. vim.loop.hrtime() }
+    local frac = size_to_fraction(pos)
+    if frac then opts.size = frac end
+    require("nvchad.term").new(opts)
+  end
+end
+
+map({ "n", "t" }, "<A-n>h", make_new("sp"),
+  { desc = "New horizontal term" })
+map({ "n", "t" }, "<A-n>v", make_new("vsp"),
+  { desc = "New vertical term" })
 
 -- Reload config: clear loaded user modules, recompile base46 (theme cache),
 -- re-source init.lua, and reapply highlights so chadrc changes (incl.
