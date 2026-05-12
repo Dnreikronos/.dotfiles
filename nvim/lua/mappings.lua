@@ -63,4 +63,10 @@ map("n", "<leader>mp", "<CMD>MarkdownPreviewToggle<CR>", { desc = "Toggle markdo
 map("n", "<C-t>", function()
   require("nvchad.themes").open()
 end, {})
+
+-- window resize
+map("n", "<A-l>", "<cmd>vertical resize +5<CR>", { desc = "Increase window width" })
+map("n", "<A-h>", "<cmd>vertical resize -5<CR>", { desc = "Decrease window width" })
+map("n", "<A-k>", "<cmd>resize +3<CR>", { desc = "Increase window height" })
+map("n", "<A-j>", "<cmd>resize -3<CR>", { desc = "Decrease window height" })
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
