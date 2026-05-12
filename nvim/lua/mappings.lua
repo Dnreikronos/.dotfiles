@@ -69,7 +69,23 @@ end, {})
 --   <C-l> -> focus right window
 --   <C-j> -> focus window below
 --   <C-k> -> focus window above
--- In terminal mode, press <C-\><C-n> first to exit term-mode, then use the above.
+--
+-- Terminal mode (when cursor is inside an :terminal buffer and keystrokes are
+-- being sent to the shell), nvim does NOT respond to window-focus keybinds
+-- because every keypress is forwarded to the underlying PTY. To regain
+-- control you must first leave terminal-mode and return to normal-mode.
+--
+-- Built-in escape:   <C-\><C-n>   (Ctrl+\ then Ctrl+n)
+-- Custom escape:     jk           (defined below)
+--
+-- After leaving term-mode, the cursor is in normal-mode inside the terminal
+-- window, so any of the <C-h/j/k/l> bindings above can be used to focus a
+-- neighboring window (e.g. the file on the left).
+--
+-- Note: <Esc> is intentionally NOT remapped here because terminal programs
+-- (vim-in-term, fzf, less, htop, etc.) need to receive raw <Esc>. The "jk"
+-- digraph is uncommon in shell input and safe to intercept.
+map("t", "jk", [[<C-\><C-n>]], { desc = "Exit terminal mode (jk escape)" })
 
 -- window resize
 map("n", "<C-A-l>", "<cmd>vertical resize +5<CR>", { desc = "Increase window width" })
