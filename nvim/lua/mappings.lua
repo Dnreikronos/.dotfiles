@@ -87,6 +87,14 @@ end, {})
 -- digraph is uncommon in shell input and safe to intercept.
 map("t", "jk", [[<C-\><C-n>]], { desc = "Exit terminal mode (jk escape)" })
 
+-- jumplist navigation (vim built-in, no remap)
+--   <C-o> -> jump back to previous location (e.g. after `gd` go-to-definition)
+--   <C-i> -> jump forward to next location in the jumplist
+--
+-- Note: <C-i> and <Tab> share the same keycode in terminals, and <Tab> is
+-- remapped above (line 40) to :bnext. Use <C-i> literally for forward-jump,
+-- or `:jumps` to inspect the full jumplist.
+
 -- window resize
 map("n", "<C-A-l>", "<cmd>vertical resize +5<CR>", { desc = "Increase window width" })
 map("n", "<C-A-h>", "<cmd>vertical resize -5<CR>", { desc = "Decrease window width" })
