@@ -64,6 +64,13 @@ map("n", "<C-t>", function()
   require("nvchad.themes").open()
 end, {})
 
+-- window focus (inherited from nvchad.mappings, see line 1)
+--   <C-h> -> focus left window
+--   <C-l> -> focus right window
+--   <C-j> -> focus window below
+--   <C-k> -> focus window above
+-- In terminal mode, press <C-\><C-n> first to exit term-mode, then use the above.
+
 -- window resize
 map("n", "<C-A-l>", "<cmd>vertical resize +5<CR>", { desc = "Increase window width" })
 map("n", "<C-A-h>", "<cmd>vertical resize -5<CR>", { desc = "Decrease window width" })
