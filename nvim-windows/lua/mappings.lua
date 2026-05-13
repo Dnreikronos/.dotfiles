@@ -29,8 +29,13 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
-vim.keymap.set("v", "<leader>/", "<Plug>(comment_toggle_linewise_visual)",
-  { noremap = false, desc = "Toggle comment on selection" })
+-- Built-in `gc` operator (nvim >= 0.10) uses `commentstring` for the current
+-- filetype. Works out of the box for Go (//), Rust (//), SQL (--), Markdown
+-- (<!-- -->), Lua (--), sh (#), etc. .env handled via autocmd in autocmds.lua.
+vim.keymap.set("x", "<leader>/", "gc",
+  { remap = true, desc = "Toggle comment on selection" })
+vim.keymap.set("n", "<leader>/", "gcc",
+  { remap = true, desc = "Toggle comment on current line" })
 
 --[[ telescope ]]
 vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
