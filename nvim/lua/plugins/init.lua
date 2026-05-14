@@ -78,6 +78,73 @@ return {
     end,
   },
   {
+    "nvim-tree/nvim-tree.lua",
+    opts = {
+      diagnostics = {
+        enable = true,
+        show_on_dirs = true,
+      },
+      renderer = {
+        highlight_git = true,
+        icons = {
+          show = {
+            git = true,
+            folder = true,
+            file = true,
+            folder_arrow = true,
+          },
+          glyphs = {
+            git = {
+              unstaged  = "",
+              staged    = "",
+              unmerged  = "",
+              renamed   = "",
+              untracked = "",
+              deleted   = "",
+              ignored   = "",
+            },
+          },
+        },
+      },
+      git = {
+        enable = true,
+        ignore = false,
+      },
+    },
+    config = function(_, opts)
+      require("nvim-tree").setup(opts)
+
+      local function apply_hl()
+        local hl = vim.api.nvim_set_hl
+        hl(0, "NvimTreeGitDirty",     { fg = "#f1fa8c" })
+        hl(0, "NvimTreeGitNew",       { fg = "#8be9fd" })
+        hl(0, "NvimTreeGitStaged",    { fg = "#50fa7b" })
+        hl(0, "NvimTreeGitRenamed",   { fg = "#ffb86c" })
+        hl(0, "NvimTreeGitDeleted",   { fg = "#ff5555" })
+        hl(0, "NvimTreeGitMerge",     { fg = "#ff79c6" })
+        hl(0, "NvimTreeGitIgnored",   { fg = "#6272a4" })
+
+        hl(0, "NvimTreeFileDirty",    { fg = "#f1fa8c" })
+        hl(0, "NvimTreeFileNew",      { fg = "#8be9fd" })
+        hl(0, "NvimTreeFileStaged",   { fg = "#50fa7b" })
+        hl(0, "NvimTreeFileRenamed",  { fg = "#ffb86c" })
+        hl(0, "NvimTreeFileDeleted",  { fg = "#ff5555" })
+        hl(0, "NvimTreeFileMerge",    { fg = "#ff79c6" })
+        hl(0, "NvimTreeFileIgnored",  { fg = "#6272a4" })
+
+        hl(0, "NvimTreeFolderDirty",  { fg = "#f1fa8c", bold = true })
+        hl(0, "NvimTreeFolderNew",    { fg = "#8be9fd", bold = true })
+        hl(0, "NvimTreeFolderStaged", { fg = "#50fa7b", bold = true })
+      end
+
+      apply_hl()
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        group = vim.api.nvim_create_augroup("NvimTreeGitHL", { clear = true }),
+        callback = apply_hl,
+      })
+    end,
+  },
+  {
     import = "nvchad.blink.lazyspec"
   },
 }
