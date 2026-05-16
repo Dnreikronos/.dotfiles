@@ -45,6 +45,7 @@ vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { des
 vim.keymap.set("n", "<tab>", vim.cmd.bnext)
 vim.keymap.set("n", "<S-tab>", vim.cmd.bNext)
 vim.keymap.set("n", "<leader>x", vim.cmd.bdelete)
+vim.keymap.set("n", "<A-b>", "<CMD>bd!<CR>", { desc = "Force delete current buffer (bd!)" })
 vim.keymap.set("n", "<leader>X", function()
   local closed = 0
   for _, b in ipairs(vim.api.nvim_list_bufs()) do
