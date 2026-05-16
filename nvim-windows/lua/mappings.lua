@@ -129,6 +129,32 @@ map("n", "<C-A-j>", "<cmd>resize -3<CR>", { desc = "Decrease window height" })
 -- available, with a geometry-based fallback for foreign terms.
 local saved_sizes = { sp = nil, vsp = nil }
 local hidden_bufs = { sp = {}, vsp = {} }
+-- Explicit buf→pos registry. Source of truth for orientation; populated by
+-- our own term-creation paths via _pending_pos + TermOpen autocmd.
+local user_term_pos = {}
+local _pending_pos = nil
+
+local function spawn_term(opts)
+  _pending_pos = opts.pos
+  require("nvchad.term").new(opts)
+end
+
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = vim.api.nvim_create_augroup("UserTermPosRegistry", { clear = true }),
+  callback = function(args)
+    if _pending_pos then
+      user_term_pos[args.buf] = _pending_pos
+      _pending_pos = nil
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWipeout", {
+  group = vim.api.nvim_create_augroup("UserTermPosCleanup", { clear = true }),
+  callback = function(args)
+    user_term_pos[args.buf] = nil
+  end,
+})
 
 local function size_to_fraction(pos)
   local abs = saved_sizes[pos]
@@ -140,17 +166,32 @@ end
 
 local function win_orientation(win)
   local buf = vim.api.nvim_win_get_buf(win)
+  -- 1. Our explicit registry (most reliable).
+  if user_term_pos[buf] then return user_term_pos[buf] end
+  -- 2. nvchad_terms metadata.
   for _, t in pairs(vim.g.nvchad_terms or {}) do
     if type(t) == "table" and t.buf == buf and (t.pos == "sp" or t.pos == "vsp") then
+      user_term_pos[buf] = t.pos
       return t.pos
     end
   end
-  -- Geometry fallback: full-width row → "sp" (horizontal); full-height col → "vsp".
+  -- 3. Geometry fallback: full-width row → "sp"; full-height col → "vsp".
   local w = vim.api.nvim_win_get_width(win)
   local h = vim.api.nvim_win_get_height(win)
   if w >= vim.o.columns - 1 then return "sp" end
   if h >= (vim.o.lines - vim.o.cmdheight - 1) - 1 then return "vsp" end
   return nil
+end
+
+local function merge_hidden(pos, bufs)
+  local seen = {}
+  for _, b in ipairs(hidden_bufs[pos] or {}) do seen[b] = true end
+  for _, b in ipairs(bufs) do
+    if not seen[b] and vim.api.nvim_buf_is_valid(b) then
+      table.insert(hidden_bufs[pos], b)
+      seen[b] = true
+    end
+  end
 end
 
 local function toggle_group(pos)
@@ -169,13 +210,52 @@ local function toggle_group(pos)
       saved_sizes[pos] = (pos == "sp")
         and vim.api.nvim_win_get_height(first_win)
         or vim.api.nvim_win_get_width(first_win)
-      hidden_bufs[pos] = {}
+      local newly_hidden = {}
+      local target_wins = {}
       for _, v in ipairs(visible) do
-        table.insert(hidden_bufs[pos], v.buf)
+        table.insert(newly_hidden, v.buf)
+        target_wins[v.win] = true
       end
-      for i = #visible, 1, -1 do
-        pcall(vim.api.nvim_win_close, visible[i].win, true)
+      merge_hidden(pos, newly_hidden)
+
+      -- Exit terminal-mode if currently in t-mode, so closing the focused
+      -- term window can't be deferred/blocked by the mode transition.
+      local mode = vim.api.nvim_get_mode().mode
+      if mode == "t" then
+        vim.api.nvim_feedkeys(
+          vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true),
+          "n", false)
       end
+
+      -- Move focus to a non-target window so we never close the current win.
+      -- Prefer a normal (non-terminal) win; otherwise any non-target term.
+      local safe_win = nil
+      for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if not target_wins[w] and vim.api.nvim_win_is_valid(w) then
+          local b = vim.api.nvim_win_get_buf(w)
+          if vim.bo[b].buftype ~= "terminal" then safe_win = w; break end
+        end
+      end
+      if not safe_win then
+        for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+          if not target_wins[w] and vim.api.nvim_win_is_valid(w) then
+            safe_win = w; break
+          end
+        end
+      end
+      if safe_win then
+        pcall(vim.api.nvim_set_current_win, safe_win)
+      end
+
+      -- Defer closes to next tick so the mode-exit and focus-switch have
+      -- settled; otherwise the currently-focused term close can no-op.
+      vim.schedule(function()
+        for i = #visible, 1, -1 do
+          if vim.api.nvim_win_is_valid(visible[i].win) then
+            pcall(vim.api.nvim_win_close, visible[i].win, true)
+          end
+        end
+      end)
       return
     end
 
@@ -189,7 +269,7 @@ local function toggle_group(pos)
       local opts = { pos = pos, id = id }
       local frac = size_to_fraction(pos)
       if frac then opts.size = frac end
-      require("nvchad.term").new(opts)
+      spawn_term(opts)
       return
     end
 
@@ -263,7 +343,7 @@ local function make_new(pos)
     local opts = { pos = pos, id = "extraTerm_" .. vim.loop.hrtime() }
     local frac = size_to_fraction(pos)
     if frac then opts.size = frac end
-    require("nvchad.term").new(opts)
+    spawn_term(opts)
   end
 end
 
