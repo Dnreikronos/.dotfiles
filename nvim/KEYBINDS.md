@@ -12,7 +12,8 @@
 | `<leader>Y` | n | Yank line to system clipboard (`"+Y`) |
 | `<leader>d` | n / v | Delete to black-hole register (`"_d`) |
 | `<leader>f` | n | LSP format current buffer |
-| `<leader>/` | v | Toggle comment on selection |
+| `<leader>/` | n | Toggle comment on current line (`gcc`) |
+| `<leader>/` | v | Toggle comment on selection (`gc`) |
 | `<leader>ff` | n | Telescope find_files |
 | `<leader>fg` | n | Telescope live_grep |
 | `<leader>x` | n | Delete current buffer (`:bdelete`) |
@@ -21,6 +22,10 @@
 | `<leader>gr` | n | Reset git hunk (gitsigns) |
 | `<leader>ln` | n | Toggle line numbers (number + relativenumber) |
 | `<leader>mp` | n | Toggle MarkdownPreview |
+| `<leader>tt` | n | Open `:terminal` in current window |
+| `<leader>tv` | n | Open `:terminal` in vertical split |
+| `<leader>ts` | n | Open `:terminal` in horizontal split |
+| `<leader>tr` | n | Rename current terminal buffer (uses `:file`) |
 | `<leader>tk` | n | Kill (force-wipe) current terminal buffer |
 | `<leader>tK` | n | Kill ALL terminal buffers |
 
@@ -28,6 +33,10 @@
 
 | Key | Mode | Action |
 |---|---|---|
+| `<leader>tt` | n | Open `:terminal` in current window |
+| `<leader>tv` | n | Open `:terminal` in vertical split (repeat → more side-by-side) |
+| `<leader>ts` | n | Open `:terminal` in horizontal split |
+| `<leader>tr` | n | Rename current terminal buffer (prompts for name) |
 | `<A-h>` | n / t | Toggle ALL horizontal terms (hide/show as group, preserves size + order) |
 | `<A-v>` | n / t | Toggle ALL vertical terms (hide/show as group, preserves size + order) |
 | `<A-n>` then `h` | n / t | Spawn a NEW horizontal term (chord) |
@@ -37,6 +46,8 @@
 | `jk` | t | Exit terminal-mode (alias for `<C-\><C-n>`) |
 
 Notes:
+- `<leader>tt`/`tv`/`ts` open a plain `:terminal` — independent of the NvChad term-group machinery (`<A-h>`/`<A-v>` toggle), so they will not be picked up by group hide/show unless geometry-fallback classifies them.
+- `<leader>tr` renames the current term buffer via `:file <name>`; used by the `nvim .` auto-open layout to label splits.
 - Toggle binds hide the term window but keep the buffer + process alive. Use `<leader>tk` / `<leader>tK` to actually terminate.
 - Spawn binds use a chord: press `<A-n>`, release, then `h` or `v` within `timeoutlen` (default 1000ms).
 - Re-show preserves the most-recent height/width captured at hide time.
@@ -47,7 +58,8 @@ Notes:
 |---|---|---|
 | `<Tab>` | n | Next buffer (`:bnext`) |
 | `<S-Tab>` | n | Previous buffer (`:bNext`) |
-| `<leader>x` | n | Close current buffer |
+| `<leader>x` | n | Close current buffer (`:bdelete`) |
+| `<A-b>` | n | Force-delete current buffer (`:bd!`) |
 | `<leader>X` | n | Wipe all empty `[No Name]` buffers |
 
 ## Window focus (from NvChad defaults)
@@ -116,6 +128,28 @@ Inside a terminal you must first leave term-mode with `jk` (or `<C-\><C-n>`) bef
 | `<C-o>` | Jump back to previous location |
 | `<C-i>` | Jump forward in jumplist (note: shares keycode with `<Tab>` — use literally) |
 | `:jumps` | Inspect full jumplist |
+
+## Startup behavior
+
+### `nvim .` → auto-open 4 named terminal vsplits
+
+Defined as a `VimEnter` autocmd in `lua/autocmds.lua`. Triggers ONLY when nvim is launched with exactly one argument that is a directory (`nvim .`, `nvim path/to/dir`).
+
+What it does:
+1. Wipes the directory-listing buffer that nvim opens by default.
+2. Replaces the window with 4 vertical-split `:terminal` buffers, left → right:
+   - `plan`
+   - `implementation`
+   - `fix`
+   - `review`
+3. Each split is named via `nvim_buf_set_name` (same effect as `:file <name>`), so the bufferline shows the labels.
+4. Cursor lands in the leftmost split (`plan`) in terminal-insert mode — start typing immediately.
+
+Notes:
+- Skipped when nvim is launched with no args, with a file arg, or with multiple args.
+- Buf-name conflicts (e.g. existing buffer already named `plan`) are silently swallowed via `pcall` — the term still works, just keeps its default `term://...` name.
+- These terminals are plain `:terminal` buffers, not NvChad term-group members. `<A-h>`/`<A-v>` group toggle will catch them only via the geometry fallback in `win_orientation`.
+- To kill the layout: `<leader>tK` wipes all term buffers.
 
 ## Discoverability
 
