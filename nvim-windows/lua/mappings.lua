@@ -352,6 +352,28 @@ map({ "n", "t" }, "<A-n>h", make_new("sp"),
 map({ "n", "t" }, "<A-n>v", make_new("vsp"),
   { desc = "New vertical term" })
 
+-- Open a plain :terminal in the current window.
+map("n", "<leader>tt", "<CMD>terminal<CR>", { desc = "Open :terminal in current window" })
+
+-- Open a plain :terminal in a vertical split (repeat → more side-by-side).
+map("n", "<leader>tv", "<CMD>vsplit | terminal<CR>", { desc = "Open :terminal in vertical split" })
+
+-- Open a plain :terminal in a horizontal split.
+map("n", "<leader>ts", "<CMD>split | terminal<CR>", { desc = "Open :terminal in horizontal split" })
+
+-- Rename current terminal buffer (uses :file under the hood).
+map("n", "<leader>tr", function()
+  local b = vim.api.nvim_get_current_buf()
+  if vim.bo[b].buftype ~= "terminal" then
+    vim.notify("Not a terminal buffer", vim.log.levels.WARN)
+    return
+  end
+  vim.ui.input({ prompt = "Rename terminal: ", default = vim.api.nvim_buf_get_name(b) }, function(name)
+    if not name or name == "" then return end
+    pcall(vim.cmd, "file " .. vim.fn.fnameescape(name))
+  end)
+end, { desc = "Rename current terminal buffer" })
+
 -- Kill (force-wipe) current terminal buffer.
 map("n", "<leader>tk", function()
   local b = vim.api.nvim_get_current_buf()
