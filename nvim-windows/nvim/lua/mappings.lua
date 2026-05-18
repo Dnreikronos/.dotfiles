@@ -120,6 +120,11 @@ map("n", "<C-A-l>", "<cmd>vertical resize +5<CR>", { desc = "Increase window wid
 map("n", "<C-A-h>", "<cmd>vertical resize -5<CR>", { desc = "Decrease window width" })
 map("n", "<C-A-k>", "<cmd>resize +3<CR>", { desc = "Increase window height" })
 map("n", "<C-A-j>", "<cmd>resize -3<CR>", { desc = "Decrease window height" })
+
+-- Equalize all windows (vim built-in <C-w>=). Works from terminal-mode too
+-- by stepping out to normal-mode first.
+map("n", "<A-r>", "<C-w>=", { desc = "Equalize all window sizes" })
+map("t", "<A-r>", [[<C-\><C-n><C-w>=]], { desc = "Equalize all window sizes" })
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
 -- Group toggle: <A-h>/<A-v> hide ALL visible terms of given orientation,
