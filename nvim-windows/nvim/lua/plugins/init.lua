@@ -94,6 +94,39 @@ return {
         enable = true,
         ignore = false,
       },
+      on_attach = function(bufnr)
+        local api = require("nvim-tree.api")
+        api.config.mappings.default_on_attach(bufnr)
+
+        local function close_folder_recursive()
+          local node = api.tree.get_node_under_cursor()
+          if not node then return end
+          if node.type ~= "directory" then
+            node = node.parent
+          end
+          if not node or node.type ~= "directory" or node.name == ".." then return end
+
+          local function walk(n)
+            if n.nodes then
+              for _, child in ipairs(n.nodes) do
+                if child.type == "directory" and child.open then
+                  walk(child)
+                  api.node.open.edit(child)
+                end
+              end
+            end
+          end
+          walk(node)
+          if node.open then
+            api.node.open.edit(node)
+          end
+        end
+
+        vim.keymap.set("n", "zc", close_folder_recursive, {
+          buffer = bufnr, noremap = true, silent = true, nowait = true,
+          desc = "nvim-tree: close folder recursively",
+        })
+      end,
     },
     config = function(_, opts)
       require("nvim-tree").setup(opts)
