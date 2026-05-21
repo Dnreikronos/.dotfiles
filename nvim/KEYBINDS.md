@@ -129,28 +129,6 @@ Inside a terminal you must first leave term-mode with `jk` (or `<C-\><C-n>`) bef
 | `<C-i>` | Jump forward in jumplist (note: shares keycode with `<Tab>` — use literally) |
 | `:jumps` | Inspect full jumplist |
 
-## Startup behavior
-
-### `nvim .` → auto-open 4 named terminal vsplits
-
-Defined as a `VimEnter` autocmd in `lua/autocmds.lua`. Triggers ONLY when nvim is launched with exactly one argument that is a directory (`nvim .`, `nvim path/to/dir`).
-
-What it does:
-1. Wipes the directory-listing buffer that nvim opens by default.
-2. Replaces the window with 4 vertical-split `:terminal` buffers, left → right:
-   - `plan`
-   - `implementation`
-   - `fix`
-   - `review`
-3. Each split is named via `nvim_buf_set_name` (same effect as `:file <name>`), so the bufferline shows the labels.
-4. Cursor lands in the leftmost split (`plan`) in terminal-insert mode — start typing immediately.
-
-Notes:
-- Skipped when nvim is launched with no args, with a file arg, or with multiple args.
-- Buf-name conflicts (e.g. existing buffer already named `plan`) are silently swallowed via `pcall` — the term still works, just keeps its default `term://...` name.
-- These terminals are plain `:terminal` buffers, not NvChad term-group members. `<A-h>`/`<A-v>` group toggle will catch them only via the geometry fallback in `win_orientation`.
-- To kill the layout: `<leader>tK` wipes all term buffers.
-
 ## Discoverability
 
 - `:Telescope keymaps` — fuzzy search every mapped key with its description
