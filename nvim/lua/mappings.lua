@@ -45,6 +45,21 @@ vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { des
 vim.keymap.set("n", "<tab>", vim.cmd.bnext)
 vim.keymap.set("n", "<S-tab>", vim.cmd.bNext)
 vim.keymap.set("n", "<leader>x", vim.cmd.bdelete)
+vim.keymap.set("n", "<leader>c", function()
+  local buf = vim.api.nvim_get_current_buf()
+  local listed = {}
+  for _, b in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_valid(b) and vim.bo[b].buflisted and b ~= buf then
+      table.insert(listed, b)
+    end
+  end
+  if #listed > 0 then
+    vim.cmd("bnext")
+  else
+    vim.cmd("enew")
+  end
+  vim.bo[buf].buflisted = false
+end, { desc = "Hide current buffer from tabline (keep alive)" })
 vim.keymap.set("n", "<A-b>", "<CMD>bd!<CR>", { desc = "Force delete current buffer (bd!)" })
 vim.keymap.set("n", "<leader>X", function()
   local closed = 0
