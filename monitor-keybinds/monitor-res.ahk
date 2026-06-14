@@ -6,8 +6,8 @@
 ; Hz (whose signal is 2560x1440 @ 120 Hz); the legacy ChangeDisplaySettings
 ; rejects those with DISP_CHANGE_FAILED (-2).
 ;
-;   Ctrl+Shift+1/2/3       -> apply preset
-;   Ctrl+Shift+Alt+1/2/3   -> RECORD the current full display config into preset
+;   Ctrl+Shift+1/2/3/4/5       -> apply preset
+;   Ctrl+Shift+Alt+1/2/3/4/5   -> RECORD the current full display config into preset
 ;
 ; A recorded preset is the exact path + mode arrays QueryDisplayConfig returns,
 ; replayed verbatim. Presets not yet recorded fall back to width/height/refresh
@@ -18,7 +18,9 @@ global SCRIPT_DIR := A_ScriptDir
 global presets := Map(
     1, {w: 3440, h: 1440, hz: 84.96,  slot: SCRIPT_DIR "\slot1.dat"},
     2, {w: 2560, h: 1080, hz: 119.88, slot: SCRIPT_DIR "\slot2.dat"},
-    3, {w: 1280, h: 720,  hz: 120,    slot: SCRIPT_DIR "\slot3.dat"})
+    3, {w: 1280, h: 720,  hz: 120,    slot: SCRIPT_DIR "\slot3.dat"},
+    4, {w: 2560, h: 1440, hz: 120,    slot: SCRIPT_DIR "\slot4.dat"},
+    5, {w: 1920, h: 1080, hz: 120,    slot: SCRIPT_DIR "\slot5.dat"})
 
 global QDC_ONLY_ACTIVE_PATHS := 0x2
 ; SDC_USE_SUPPLIED_DISPLAY_CONFIG(0x20) | SDC_APPLY(0x80) | SDC_SAVE_TO_DATABASE(0x200)
@@ -32,9 +34,13 @@ global MODE_SIZE  := 64   ; sizeof(DISPLAYCONFIG_MODE_INFO) on x64
 ^+1::ApplyPreset(1)
 ^+2::ApplyPreset(2)
 ^+3::ApplyPreset(3)
+^+4::ApplyPreset(4)
+^+5::ApplyPreset(5)
 ^+!1::RecordPreset(1)
 ^+!2::RecordPreset(2)
 ^+!3::RecordPreset(3)
+^+!4::RecordPreset(4)
+^+!5::RecordPreset(5)
 
 ApplyPreset(n) {
     global presets

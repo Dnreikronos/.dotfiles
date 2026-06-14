@@ -8,7 +8,9 @@ refresh-rate presets, via AutoHotkey v2.
 | `Ctrl+Shift+1` | 3440×1440 @ 84.96 Hz |
 | `Ctrl+Shift+2` | 2560×1080 @ 119.88 Hz |
 | `Ctrl+Shift+3` | 1280×720 @ 120 Hz (scaled: 2560×1440 @ 120 signal) |
-| `Ctrl+Shift+Alt+1/2/3` | **Record** the monitor's current mode into that preset |
+| `Ctrl+Shift+4` | 2560×1440 @ 120 Hz |
+| `Ctrl+Shift+5` | 1920×1080 @ 120 Hz |
+| `Ctrl+Shift+Alt+1/2/3/4/5` | **Record** the monitor's current mode into that preset |
 
 ## How it works
 
