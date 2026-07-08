@@ -27,7 +27,20 @@ vim.keymap.set("n", "<leader>Y", [["+Y]])
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 vim.keymap.set("n", "Q", "<nop>")
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "LSP hover" })
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
+
+vim.api.nvim_create_user_command("LspInfo", function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if vim.tbl_isempty(clients) then
+    print("No LSP clients attached to this buffer")
+    return
+  end
+
+  for _, client in ipairs(clients) do
+    print(string.format("%s (id: %d)", client.name, client.id))
+  end
+end, { desc = "Show LSP clients attached to the current buffer" })
 
 -- Built-in `gc` operator (nvim >= 0.10) uses `commentstring` for the current
 -- filetype. Works out of the box for Go (//), Rust (//), SQL (--), Markdown
