@@ -38,8 +38,17 @@ vim.keymap.set("n", "<leader>/", "gcc",
   { remap = true, desc = "Toggle comment on current line" })
 
 --[[ telescope ]]
-vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
-vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = 'Find Files' })
+local telescope_builtin = require "telescope.builtin"
+
+vim.keymap.set('n', '<leader>fg', telescope_builtin.live_grep, {})
+vim.keymap.set('n', '<leader>ff', function()
+  local git_root = vim.fn.systemlist({ "git", "rev-parse", "--show-toplevel" })[1]
+  if vim.v.shell_error == 0 and git_root and git_root ~= "" then
+    telescope_builtin.git_files({ show_untracked = true, cwd = git_root })
+  else
+    telescope_builtin.find_files()
+  end
+end, { desc = 'Find Files' })
 
 
 vim.keymap.set("n", "<tab>", vim.cmd.bnext)
