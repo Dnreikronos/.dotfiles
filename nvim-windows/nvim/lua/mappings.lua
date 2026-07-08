@@ -381,6 +381,11 @@ map({ "n", "t" }, "<A-n>h", make_new("sp"),
 map({ "n", "t" }, "<A-n>v", make_new("vsp"),
   { desc = "New vertical term" })
 
+map("n", "<leader>ts", make_new("sp"),
+  { desc = "New horizontal terminal split" })
+map("n", "<leader>tv", make_new("vsp"),
+  { desc = "New vertical terminal split" })
+
 -- Kill (force-wipe) current terminal buffer.
 map("n", "<leader>tk", function()
   local b = vim.api.nvim_get_current_buf()
